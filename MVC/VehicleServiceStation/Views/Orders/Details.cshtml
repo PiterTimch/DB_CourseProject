@@ -1,0 +1,101 @@
+@model OrderDetails
+@{
+    ViewData["Title"] = $"Замовлення #{Model.OrderId:D5}";
+}
+<div class="page-heading print-hide">
+    <div><p class="eyebrow">ОПЕРАЦІЙНИЙ ПРОЦЕС · @Model.OrderDate.ToString("dd.MM.yyyy")</p><h1>Замовлення <span class="heading-id">#@Model.OrderId.ToString("D5")</span></h1><p class="heading-note">@Model.Car · власник @Model.Customer</p></div>
+    <div class="heading-actions"><span class="status-badge status-@Model.Status">@(Model.Status switch { "open" => "Нове", "in_progress" => "У роботі", "closed" => "Закрите", _ => Model.Status })</span>@if (Model.Status != "closed"){<a class="button button-quiet" asp-action="Edit" asp-route-id="@Model.OrderId">Редагувати</a>}</div>
+</div>
+<div asp-validation-summary="ModelOnly" class="validation-summary print-hide"></div>
+<section class="order-overview page-card">
+    <div class="overview-item"><span>АВТОМОБІЛЬ</span><strong>@Model.Car</strong><small>Системний ID @Model.CarId</small></div>
+    <div class="overview-item"><span>КЛІЄНТ</span><strong>@Model.Customer</strong><small>@Model.Phone</small></div>
+    <div class="overview-item"><span>ВІДПОВІДАЛЬНИЙ</span><strong>@Model.Employee</strong><small>Дата @Model.OrderDate.ToString("dd.MM.yyyy")</small></div>
+    <div class="overview-item"><span>ПРОБІГ ПРИ ПРИЙОМІ</span><strong>@Model.Mileage.ToString("N0") км</strong><small>Термін: @(Model.Deadline?.ToString("dd.MM.yyyy") ?? "не задано")</small></div>
+</section>
+
+<div class="order-layout">
+    <div class="order-lines">
+        <section class="page-card line-card">
+            <div class="card-toolbar"><div><strong>Виконані роботи</strong><span class="count-pill">@Model.Services.Count</span></div>@if (Model.Status != "closed"){<span class="muted">Ціна фіксується в замовленні</span>}</div>
+            @if (Model.Services.Count == 0){<div class="line-empty">Послуги ще не додані</div>}
+            else
+            {
+                <div class="table-responsive"><table class="data-table"><thead><tr><th>ПОСЛУГА</th><th>ВИКОНАВЕЦЬ</th><th>КІЛЬКІСТЬ</th><th>ЦІНА</th><th>СУМА</th>@if (Model.Status != "closed"){<th></th>}</tr></thead><tbody>@foreach (var line in Model.Services){<tr><td><strong>@line.Name</strong></td><td>@line.Employee</td><td>@line.Quantity</td><td>@line.Price.ToString("N2") ₴</td><td class="money-cell">@line.LineTotal.ToString("N2") ₴</td>@if (Model.Status != "closed"){<td><form asp-action="RemoveService" asp-route-id="@Model.OrderId" method="post"><input type="hidden" name="serviceId" value="@line.ItemId" /><button class="icon-button icon-remove" aria-label="Видалити послугу" type="submit">×</button></form></td>}</tr>}</tbody></table></div>
+            }
+            @if (Model.Status != "closed")
+            {
+                <form asp-action="AddService" asp-route-id="@Model.OrderId" method="post" class="inline-add-form">
+                    <div class="field-block"><label for="ServiceId">Послуга</label><select id="ServiceId" name="ServiceId" asp-items="ViewBag.Services"><option value="">Оберіть роботу</option></select></div>
+                    <div class="field-block"><label for="EmployeeId">Виконавець</label><select id="EmployeeId" name="EmployeeId" asp-items="ViewBag.Employees"><option value="">Оберіть працівника</option></select></div>
+                    <div class="field-block quantity-field"><label for="serviceQuantity">К-сть</label><input id="serviceQuantity" name="Quantity" type="number" min="1" value="1" /></div>
+                    <button class="button button-quiet" type="submit">＋ Додати</button>
+                </form>
+            }
+        </section>
+
+        <section class="page-card line-card">
+            <div class="card-toolbar"><div><strong>Використані запчастини</strong><span class="count-pill">@Model.Parts.Count</span></div></div>
+            @if (Model.Parts.Count == 0){<div class="line-empty">Запчастини ще не додані</div>}
+            else
+            {
+                <div class="table-responsive"><table class="data-table"><thead><tr><th>ЗАПЧАСТИНА</th><th>АРТИКУЛ</th><th>КІЛЬКІСТЬ</th><th>ЦІНА</th><th>СУМА</th>@if (Model.Status != "closed"){<th></th>}</tr></thead><tbody>@foreach (var line in Model.Parts){<tr><td><strong>@line.Name</strong></td><td class="mono-text">@line.Article</td><td>@line.Quantity</td><td>@line.Price.ToString("N2") ₴</td><td class="money-cell">@line.LineTotal.ToString("N2") ₴</td>@if (Model.Status != "closed"){<td><form asp-action="RemovePart" asp-route-id="@Model.OrderId" method="post"><input type="hidden" name="partId" value="@line.ItemId" /><button class="icon-button icon-remove" aria-label="Видалити запчастину" type="submit">×</button></form></td>}</tr>}</tbody></table></div>
+            }
+            @if (Model.Status != "closed")
+            {
+                <form asp-action="AddPart" asp-route-id="@Model.OrderId" method="post" class="inline-add-form">
+                    <div class="field-block field-grow"><label for="PartId">Запчастина</label><select id="PartId" name="PartId" asp-items="ViewBag.Parts"><option value="">Оберіть запчастину</option></select></div>
+                    <div class="field-block quantity-field"><label for="partQuantity">К-сть</label><input id="partQuantity" name="Quantity" type="number" min="1" value="1" /></div>
+                    <button class="button button-quiet" type="submit">＋ Додати</button>
+                </form>
+            }
+        </section>
+    </div>
+
+    <aside class="page-card total-card">
+        <div class="total-kicker">ПІДСУМОК ЗАМОВЛЕННЯ</div>
+        <div class="subtotal-row"><span>Послуги</span><strong>@Model.Services.Sum(item => item.LineTotal).ToString("N2") ₴</strong></div>
+        <div class="subtotal-row"><span>Запчастини</span><strong>@Model.Parts.Sum(item => item.LineTotal).ToString("N2") ₴</strong></div>
+        <form asp-action="Discount" asp-route-id="@Model.OrderId" method="post" class="discount-form print-hide">
+            <label for="discount">Знижка, %</label><div class="discount-entry"><input id="discount" name="Discount" type="number" min="0" max="100" step="0.01" value="@Model.Discount.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)" @(Model.Status == "closed" ? "disabled" : null) />@if (Model.Status != "closed"){<button class="icon-button" type="submit" aria-label="Застосувати знижку">✓</button>}</div>
+        </form>
+        @if (Model.Discount > 0){<div class="discount-saved"><span>Знижка застосована</span><strong>−@Model.Discount.ToString("0.##")%</strong></div>}
+        <div class="total-divider"></div>
+        <div class="total-row"><span>До сплати</span><strong>@Model.TotalCost.ToString("N2") <small>₴</small></strong></div>
+        @if (Model.Status != "closed")
+        {
+            <form asp-action="Close" asp-route-id="@Model.OrderId" method="post" class="print-hide"><button class="button button-primary button-wide" type="submit">Закрити замовлення <span>→</span></button></form>
+        }
+        else
+        {
+            <div class="closed-note">✓ Підсумок зафіксовано</div>
+        }
+        <button class="button button-quiet button-wide print-hide" type="button" onclick="window.print()">Друк акта робіт</button>
+        @if (Model.Status == "open")
+        {
+            <form asp-action="Delete" asp-route-id="@Model.OrderId" method="post" class="print-hide"><button class="button-link-danger" type="submit">Видалити чернетку</button></form>
+        }
+    </aside>
+</div>
+
+<section class="print-only print-sheet">
+    <div class="print-brand">GARAGEFLOW <span>АКТ ВИКОНАНИХ РОБІТ</span></div>
+    <h1>Замовлення #@Model.OrderId.ToString("D5")</h1>
+    <div class="print-meta"><span>Дата: @Model.OrderDate.ToString("dd.MM.yyyy")</span><span>Автомобіль: @Model.Car</span><span>Власник: @Model.Customer</span><span>Пробіг: @Model.Mileage.ToString("N0") км</span></div>
+    <h2>Послуги</h2>
+    <table class="data-table"><thead><tr><th>Назва</th><th>Виконавець</th><th>Кількість</th><th>Ціна</th><th>Сума</th></tr></thead><tbody>
+    @foreach (var line in Model.Services)
+    {
+        <tr><td>@line.Name</td><td>@line.Employee</td><td>@line.Quantity</td><td>@line.Price.ToString("N2") ₴</td><td>@line.LineTotal.ToString("N2") ₴</td></tr>
+    }
+    </tbody></table>
+    <h2>Запчастини</h2>
+    <table class="data-table"><thead><tr><th>Назва</th><th>Артикул</th><th>Кількість</th><th>Ціна</th><th>Сума</th></tr></thead><tbody>
+    @foreach (var line in Model.Parts)
+    {
+        <tr><td>@line.Name</td><td>@line.Article</td><td>@line.Quantity</td><td>@line.Price.ToString("N2") ₴</td><td>@line.LineTotal.ToString("N2") ₴</td></tr>
+    }
+    </tbody></table>
+    <div class="print-total">Знижка @Model.Discount.ToString("0.##")% · Підсумкова вартість <strong>@Model.TotalCost.ToString("N2") ₴</strong></div>
+    <div class="signature-row"><span>Роботу виконав ____________________</span><span>Автомобіль отримав ____________________</span></div>
+</section>

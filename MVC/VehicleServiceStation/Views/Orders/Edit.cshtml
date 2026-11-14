@@ -1,0 +1,19 @@
+@model OrderEditForm
+@{
+    ViewData["Title"] = "Редагувати замовлення";
+}
+<div class="page-heading"><div><p class="eyebrow">ЗАМОВЛЕННЯ #@Model.OrderId.ToString("D5")</p><h1>Дані замовлення</h1><p class="heading-note">Зміни доступні до закриття замовлення</p></div></div>
+<section class="page-card form-card">
+    <form asp-action="Edit" method="post">
+        <input asp-for="OrderId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <div class="form-grid">
+            <div class="field-block field-full"><label asp-for="CarId">Автомобіль</label><select asp-for="CarId" asp-items="ViewBag.Cars"><option value="">Оберіть авто</option></select><span asp-validation-for="CarId" class="field-error"></span></div>
+            <div class="field-block"><label asp-for="OrderDate">Дата замовлення</label><input asp-for="OrderDate" type="date" /><span asp-validation-for="OrderDate" class="field-error"></span></div>
+            <div class="field-block"><label asp-for="Deadline">Термін</label><input asp-for="Deadline" type="date" /><span asp-validation-for="Deadline" class="field-error"></span></div>
+            <div class="field-block"><label asp-for="Mileage">Пробіг, км</label><input asp-for="Mileage" type="number" min="0" step="1" /><span asp-validation-for="Mileage" class="field-error"></span></div>
+        </div>
+        <div class="form-actions"><a class="button button-quiet" asp-action="Details" asp-route-id="@Model.OrderId">Назад</a><button class="button button-primary" type="submit">Зберегти зміни <span>→</span></button></div>
+    </form>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

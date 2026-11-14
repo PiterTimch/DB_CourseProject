@@ -1,0 +1,26 @@
+@model IReadOnlyList<OrderSummary>
+@{
+    ViewData["Title"] = "Замовлення";
+}
+<div class="page-heading"><div><p class="eyebrow">ОПЕРАЦІЙНИЙ ПРОЦЕС</p><h1>Замовлення</h1><p class="heading-note">Робочий список обслуговування автомобілів</p></div><a class="button button-primary" asp-action="Create"><span>＋</span> Нове замовлення</a></div>
+<section class="page-card">
+    <form class="filter-bar" method="get">
+        <div class="search-box"><span>⌕</span><input name="query" value="@ViewBag.Query" placeholder="Автомобіль, номер або клієнт" /></div>
+        <select name="status" aria-label="Фільтр за статусом"><option value="">Усі статуси</option><option value="open" selected="@(ViewBag.Status as string == "open")">Нове</option><option value="in_progress" selected="@(ViewBag.Status as string == "in_progress")">У роботі</option><option value="closed" selected="@(ViewBag.Status as string == "closed")">Закрите</option></select>
+        <button class="button button-quiet" type="submit">Застосувати</button>
+    </form>
+    <div class="card-toolbar"><div><strong>Замовлення сервісу</strong><span class="count-pill">@Model.Count</span></div><span class="muted">Оперативний список · нові звернення вгорі</span></div>
+    @if (Model.Count == 0)
+    {
+        <div class="table-empty"><span>▤</span><strong>Замовлень не знайдено</strong><p>Змініть фільтр або створіть нове замовлення.</p><a class="text-link" asp-action="Create">Створити замовлення →</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="data-table"><thead><tr><th>ЗАМОВЛЕННЯ</th><th>АВТОМОБІЛЬ</th><th>КЛІЄНТ</th><th>ВІДПОВІДАЛЬНИЙ</th><th>СТАТУС</th><th>СУМА</th></tr></thead><tbody>
+        @foreach (var order in Model)
+        {
+            <tr class="clickable-row"><td><a class="row-primary" asp-action="Details" asp-route-id="@order.OrderId">#@order.OrderId.ToString("D5")</a><small class="cell-sub">@order.OrderDate.ToString("dd.MM.yyyy")</small></td><td><strong>@order.Car</strong></td><td>@order.Customer</td><td>@order.Employee</td><td><span class="status-badge status-@order.Status">@(order.Status switch { "open" => "Нове", "in_progress" => "У роботі", "closed" => "Закрите", _ => order.Status })</span></td><td class="money-cell">@order.TotalCost.ToString("N2") ₴</td></tr>
+        }
+        </tbody></table></div>
+    }
+</section>
