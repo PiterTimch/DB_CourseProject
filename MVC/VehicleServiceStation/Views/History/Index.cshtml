@@ -1,0 +1,25 @@
+@model HistoryPage
+@{
+    ViewData["Title"] = "Історія сервісу";
+}
+<div class="page-heading"><div><p class="eyebrow">ОБСЛУГОВУВАННЯ АВТО</p><h1>Історія сервісу</h1><p class="heading-note">Введіть системний ID автомобіля, щоб переглянути замовлення</p></div></div>
+<section class="history-search page-card">
+    <form asp-action="Index" method="get" class="history-search-form">
+        <div class="field-block"><label for="CarId">Системний ідентифікатор авто</label><div class="search-box"><span>◈</span><input id="CarId" name="CarId" type="number" min="1" value="@Model.CarId" placeholder="Наприклад, 1" /></div><span class="field-error">@Html.ValidationMessage("CarId")</span></div>
+        <button class="button button-primary" type="submit">Знайти історію <span>→</span></button>
+    </form>
+</section>
+@if (Model.Car is not null)
+{
+    <div class="history-car-card"><div class="history-car-icon">◈</div><div><span class="eyebrow">ЗНАЙДЕНО АВТОМОБІЛЬ · ID @Model.Car.CarId</span><h2>@Model.Car.Model</h2><p><span class="plate-badge">@Model.Car.LicensePlate</span><span class="vin-note">VIN @Model.Car.Vin</span></p></div></div>
+    <section class="page-card history-orders"><div class="card-toolbar"><div><strong>Замовлення автомобіля</strong><span class="count-pill">@Model.Orders.Count</span></div></div>
+        @if (Model.Orders.Count == 0)
+        {
+            <div class="table-empty"><span>↗</span><strong>Історія поки порожня</strong><p>Для цього автомобіля ще не зареєстровано сервісних замовлень.</p></div>
+        }
+        else
+        {
+            <div class="table-responsive"><table class="data-table"><thead><tr><th>ЗАМОВЛЕННЯ</th><th>ДАТА</th><th>ВІДПОВІДАЛЬНИЙ</th><th>СТАТУС</th><th>ВАРТІСТЬ</th></tr></thead><tbody>@foreach (var order in Model.Orders){<tr><td><strong>#@order.OrderId.ToString("D5")</strong></td><td>@order.OrderDate.ToString("dd.MM.yyyy")</td><td>@order.Employee</td><td><span class="status-badge status-@order.Status">@(order.Status switch { "open" => "Нове", "in_progress" => "У роботі", "closed" => "Закрите", _ => order.Status })</span></td><td class="money-cell">@order.TotalCost.ToString("N2") ₴</td></tr>}</tbody></table></div>
+        }
+    </section>
+}
