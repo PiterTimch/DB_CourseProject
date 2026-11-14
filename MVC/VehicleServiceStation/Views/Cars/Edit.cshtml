@@ -1,0 +1,7 @@
+@model CarForm
+@{
+    ViewData["Title"] = "Редагувати автомобіль";
+}
+<div class="page-heading"><div><p class="eyebrow">АВТОПАРК · ID @Model.CarId</p><h1>Редагувати авто</h1><p class="heading-note">Оновіть дані автомобіля або власника</p></div></div>
+<section class="page-card form-card"><form asp-action="Edit" method="post"><input asp-for="CarId" type="hidden" /><partial name="_Form" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

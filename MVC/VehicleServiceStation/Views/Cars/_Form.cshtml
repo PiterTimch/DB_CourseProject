@@ -1,0 +1,9 @@
+@model CarForm
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+<div class="form-grid">
+    <div class="field-block field-full"><label asp-for="CustomerId">Власник</label><select asp-for="CustomerId" asp-items="ViewBag.Customers"><option value="">Оберіть клієнта</option></select><span asp-validation-for="CustomerId" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="Model">Марка і модель</label><input asp-for="Model" placeholder="Наприклад, Toyota Camry" /><span asp-validation-for="Model" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="LicensePlate">Державний номер</label><input asp-for="LicensePlate" placeholder="AA0000AA" /><span asp-validation-for="LicensePlate" class="field-error"></span></div>
+    <div class="field-block field-full"><label asp-for="Vin">VIN-код</label><input asp-for="Vin" class="mono-input" placeholder="17 символів" /><span asp-validation-for="Vin" class="field-error"></span><small class="field-hint">VIN має містити 17 символів без літер I, O та Q.</small></div>
+</div>
+<div class="form-actions"><a class="button button-quiet" asp-action="Index">Скасувати</a><button class="button button-primary" type="submit">Зберегти авто <span>→</span></button></div>

@@ -1,0 +1,7 @@
+@model CarForm
+@{
+    ViewData["Title"] = "Додати автомобіль";
+}
+<div class="page-heading"><div><p class="eyebrow">АВТОПАРК КЛІЄНТІВ</p><h1>Новий автомобіль</h1><p class="heading-note">Прив’яжіть авто до зареєстрованого клієнта</p></div></div>
+<section class="page-card form-card"><form asp-action="Create" method="post"><partial name="_Form" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

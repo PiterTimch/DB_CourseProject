@@ -1,0 +1,9 @@
+@model CustomerForm
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+<div class="form-grid">
+    <div class="field-block"><label asp-for="CustomerType">Тип клієнта</label><select asp-for="CustomerType"><option value="individual">Фізична особа</option><option value="business">Юридична особа</option></select><span asp-validation-for="CustomerType" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="Phone">Телефон</label><input asp-for="Phone" placeholder="+380 00 000 00 00" /><span asp-validation-for="Phone" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="FirstName">Ім’я або назва компанії</label><input asp-for="FirstName" placeholder="Наприклад, Андрій" /><span asp-validation-for="FirstName" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="LastName">Прізвище</label><input asp-for="LastName" placeholder="Наприклад, Коваленко" /><span asp-validation-for="LastName" class="field-error"></span></div>
+</div>
+<div class="form-actions"><a class="button button-quiet" asp-action="Index">Скасувати</a><button class="button button-primary" type="submit">Зберегти клієнта <span>→</span></button></div>

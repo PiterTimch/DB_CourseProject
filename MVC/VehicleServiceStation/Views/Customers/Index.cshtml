@@ -1,0 +1,37 @@
+@model IReadOnlyList<Customer>
+@{
+    ViewData["Title"] = "Клієнти";
+}
+
+<div class="page-heading">
+    <div><p class="eyebrow">КЛІЄНТСЬКА БАЗА</p><h1>Клієнти</h1><p class="heading-note">Контакти власників і корпоративних партнерів</p></div>
+    <a class="button button-primary" asp-action="Create"><span>＋</span> Додати клієнта</a>
+</div>
+
+<section class="page-card">
+    <div class="card-toolbar"><div><strong>Усі клієнти</strong><span class="count-pill">@Model.Count</span></div><span class="muted">Фізичні особи та компанії</span></div>
+    @if (Model.Count == 0)
+    {
+        <div class="table-empty"><span>◎</span><strong>Поки немає клієнтів</strong><p>Додайте першого клієнта, щоб зареєструвати автомобіль або замовлення.</p></div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead><tr><th>КЛІЄНТ</th><th>ТИП</th><th>ТЕЛЕФОН</th><th>АВТО</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td><strong>@customer.LastName @customer.FirstName</strong><small class="cell-sub">ID @customer.CustomerId.ToString("D4")</small></td>
+                        <td><span class="type-badge">@(customer.CustomerType == "business" ? "Компанія" : "Фізична особа")</span></td>
+                        <td>@customer.Phone</td>
+                        <td><span class="count-pill">@customer.CarCount</span></td>
+                        <td class="row-actions"><a class="text-link" asp-action="Edit" asp-route-id="@customer.CustomerId">Редагувати</a><form asp-action="Delete" asp-route-id="@customer.CustomerId" method="post"><button class="text-link text-danger" type="submit">Видалити</button></form></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

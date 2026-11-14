@@ -1,0 +1,21 @@
+@model IReadOnlyList<Car>
+@{
+    ViewData["Title"] = "Автомобілі";
+}
+<div class="page-heading"><div><p class="eyebrow">АВТОПАРК КЛІЄНТІВ</p><h1>Автомобілі</h1><p class="heading-note">Автомобілі та їхні власники</p></div><a class="button button-primary" asp-action="Create"><span>＋</span> Додати авто</a></div>
+<section class="page-card">
+    <div class="card-toolbar"><div><strong>Зареєстровані автомобілі</strong><span class="count-pill">@Model.Count</span></div><a class="text-link" asp-controller="History" asp-action="Index">Знайти історію за ID →</a></div>
+    @if (Model.Count == 0)
+    {
+        <div class="table-empty"><span>◈</span><strong>Автомобілі ще не додані</strong><p>Спершу зареєструйте клієнта, потім додайте його автомобіль.</p></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="data-table"><thead><tr><th>АВТОМОБІЛЬ</th><th>ДЕРЖАВНИЙ НОМЕР</th><th>VIN</th><th>ВЛАСНИК</th><th></th></tr></thead><tbody>
+        @foreach (var car in Model)
+        {
+            <tr><td><strong>@car.Model</strong><small class="cell-sub">Системний ID @car.CarId</small></td><td><span class="plate-badge">@car.LicensePlate</span></td><td class="mono-text">@car.Vin</td><td>@car.CustomerName</td><td class="row-actions"><a class="text-link" asp-action="Edit" asp-route-id="@car.CarId">Редагувати</a><form asp-action="Delete" asp-route-id="@car.CarId" method="post"><button class="text-link text-danger" type="submit">Видалити</button></form></td></tr>
+        }
+        </tbody></table></div>
+    }
+</section>

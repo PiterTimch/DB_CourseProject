@@ -1,0 +1,7 @@
+@model CustomerForm
+@{
+    ViewData["Title"] = "Новий клієнт";
+}
+<div class="page-heading"><div><p class="eyebrow">КЛІЄНТСЬКА БАЗА</p><h1>Новий клієнт</h1><p class="heading-note">Додайте дані власника автомобіля</p></div></div>
+<section class="page-card form-card"><form asp-action="Create" method="post"><partial name="_Form" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
