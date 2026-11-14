@@ -1,0 +1,45 @@
+@model LoginForm
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "Вхід до системи";
+}
+
+<section class="login-shell">
+    <div class="login-card">
+        <a class="brand login-brand" asp-controller="Home" asp-action="Index">
+            <span class="brand-mark">G</span>
+            <span><strong>garageflow</strong><small>СЕРВІСНИЙ ЦЕНТР</small></span>
+        </a>
+        <div class="login-intro">
+            <span class="eyebrow">РАДІ БАЧИТИ ВАС</span>
+            <h1>Увійдіть до<br /><em>робочого простору.</em></h1>
+            <p>Керуйте замовленнями, клієнтами й автомобілями в одному місці.</p>
+        </div>
+        <form asp-action="Login" method="post" class="form-stack">
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <div class="field-block">
+                <label asp-for="Login">Логін</label>
+                <input asp-for="Login" autocomplete="username" placeholder="Ваш робочий логін" />
+                <span asp-validation-for="Login" class="field-error"></span>
+            </div>
+            <div class="field-block">
+                <label asp-for="Password">Пароль</label>
+                <input asp-for="Password" autocomplete="current-password" placeholder="Введіть пароль" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+            <button class="button button-primary button-wide" type="submit">Увійти до системи <span>→</span></button>
+        </form>
+        <div class="login-foot">Доступ надає адміністратор сервісного центру.</div>
+    </div>
+    <div class="login-art">
+        <div class="art-orbit orbit-one"></div>
+        <div class="art-orbit orbit-two"></div>
+        <div class="art-content"><span class="art-kicker">SERVICE · CARE · TRUST</span><div class="art-illustration">✳</div><h2>Кожна деталь<br />має значення.</h2><p>Прозорий облік. Впевнене обслуговування.</p></div>
+        <span class="art-index">01 — 04</span>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
