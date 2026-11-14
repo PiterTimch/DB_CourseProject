@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · GarageFlow</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-frame">
+        <aside class="sidebar">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">G</span>
+                <span><strong>garageflow</strong><small>СЕРВІСНИЙ ЦЕНТР</small></span>
+            </a>
+            <div class="nav-caption">РОБОЧИЙ ПРОСТІР</div>
+            <nav class="side-nav">
+                <a asp-controller="Home" asp-action="Index"><span class="nav-icon">⌂</span>Огляд</a>
+                @if (User.IsInRole(AccessRoles.Admin) || User.IsInRole(AccessRoles.Manager))
+                {
+                    <a asp-controller="Orders" asp-action="Index"><span class="nav-icon">▤</span>Замовлення</a>
+                    <a asp-controller="Cars" asp-action="Index"><span class="nav-icon">◈</span>Автомобілі</a>
+                    <a asp-controller="Customers" asp-action="Index"><span class="nav-icon">◎</span>Клієнти</a>
+                    <a asp-controller="History" asp-action="Index"><span class="nav-icon">↗</span>Історія сервісу</a>
+                }
+                @if (User.IsInRole(AccessRoles.Admin))
+                {
+                    <div class="nav-caption nav-caption-spaced">ДОВІДНИКИ</div>
+                    <a asp-controller="Services" asp-action="Index"><span class="nav-icon">✳</span>Послуги</a>
+                    <a asp-controller="Parts" asp-action="Index"><span class="nav-icon">⬡</span>Запчастини</a>
+                    <a asp-controller="Employees" asp-action="Index"><span class="nav-icon">♙</span>Працівники</a>
+                }
+            </nav>
+            <div class="sidebar-bottom">
+                <span class="status-dot"></span>
+                <span><strong>Система активна</strong><small>PostgreSQL · підключено</small></span>
+            </div>
+        </aside>
+        <main class="main-area">
+            <header class="topbar">
+                <div class="topbar-context"><span class="eyebrow">АВТОСЕРВІС</span><span class="topbar-separator">/</span><span>@ViewData["Title"]</span></div>
+                <div class="user-menu">
+                    <div class="user-avatar">@(User.Identity?.Name?.Length > 0 ? User.Identity.Name[..1].ToUpperInvariant() : "G")</div>
+                    <div class="user-meta"><strong>@(User.Identity?.Name ?? "Гість")</strong><small>@(User.Claims.FirstOrDefault(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value ?? "")</small></div>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            <button class="icon-button" type="submit" aria-label="Вийти">↗</button>
+                        </form>
+                    }
+                </div>
+            </header>
+            <div class="page-content">
+                <partial name="_StatusMessage" />
+                @RenderBody()
+            </div>
+            <footer class="page-footer"><span>GarageFlow · Облік сервісного обслуговування</span><span>Версія 1.0</span></footer>
+        </main>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
