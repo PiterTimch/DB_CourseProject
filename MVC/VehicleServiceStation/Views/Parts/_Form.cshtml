@@ -1,0 +1,4 @@
+@model PartForm
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+<div class="form-grid"><div class="field-block field-full"><label asp-for="Name">Назва запчастини</label><input asp-for="Name" placeholder="Наприклад, масляний фільтр" /><span asp-validation-for="Name" class="field-error"></span></div><div class="field-block"><label asp-for="Article">Артикул</label><input asp-for="Article" placeholder="FILTER-OIL-01" /><span asp-validation-for="Article" class="field-error"></span></div><div class="field-block"><label asp-for="Price">Ціна, ₴</label><input asp-for="Price" type="number" min="0" step="0.01" /><span asp-validation-for="Price" class="field-error"></span></div></div>
+<div class="form-actions"><a class="button button-quiet" asp-action="Index">Скасувати</a><button class="button button-primary" type="submit">Зберегти запчастину <span>→</span></button></div>

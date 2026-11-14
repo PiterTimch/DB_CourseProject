@@ -1,0 +1,7 @@
+@model PartForm
+@{
+    ViewData["Title"] = "Нова запчастина";
+}
+<div class="page-heading"><div><p class="eyebrow">СКЛАДСЬКИЙ ДОВІДНИК</p><h1>Нова запчастина</h1><p class="heading-note">Додайте позицію з унікальним артикулом</p></div></div>
+<section class="page-card form-card"><form asp-action="Create" method="post"><partial name="_Form" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

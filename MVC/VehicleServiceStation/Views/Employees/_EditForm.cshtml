@@ -1,0 +1,11 @@
+@model EmployeeEditForm
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+<input asp-for="EmployeeId" type="hidden" />
+<div class="form-grid">
+    <div class="field-block"><label asp-for="FirstName">Ім’я</label><input asp-for="FirstName" /><span asp-validation-for="FirstName" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="LastName">Прізвище</label><input asp-for="LastName" /><span asp-validation-for="LastName" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="Login">Логін</label><input asp-for="Login" autocomplete="username" /><span asp-validation-for="Login" class="field-error"></span></div>
+    <div class="field-block"><label asp-for="Role">Роль</label><select asp-for="Role"><option value="admin">Адміністратор</option><option value="manager">Менеджер</option><option value="director">Керівник</option><option value="guest">Гість</option></select><span asp-validation-for="Role" class="field-error"></span></div>
+    <div class="field-block field-full"><label asp-for="Password">Новий пароль</label><input asp-for="Password" autocomplete="new-password" placeholder="Залиште порожнім, щоб не змінювати" /><span asp-validation-for="Password" class="field-error"></span></div>
+</div>
+<div class="form-actions"><a class="button button-quiet" asp-action="Index">Скасувати</a><button class="button button-primary" type="submit">Зберегти зміни <span>→</span></button></div>

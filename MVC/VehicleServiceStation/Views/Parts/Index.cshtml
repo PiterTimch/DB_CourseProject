@@ -1,0 +1,15 @@
+@model IReadOnlyList<CatalogItem>
+@{
+    ViewData["Title"] = "Запчастини";
+}
+<div class="page-heading"><div><p class="eyebrow">СКЛАДСЬКИЙ ДОВІДНИК</p><h1>Запчастини</h1><p class="heading-note">Комплектуючі для замовлень сервісного центру</p></div><a class="button button-primary" asp-action="Create"><span>＋</span> Додати запчастину</a></div>
+<section class="page-card"><div class="card-toolbar"><div><strong>Каталог запчастин</strong><span class="count-pill">@Model.Count</span></div><span class="muted">Імпорт також доступний через командний файл</span></div>
+@if (Model.Count == 0)
+{
+    <div class="table-empty"><span>⬡</span><strong>Довідник запчастин порожній</strong><p>Додайте позицію або скористайтеся командою імпорту.</p></div>
+}
+else
+{
+    <div class="table-responsive"><table class="data-table"><thead><tr><th>ЗАПЧАСТИНА</th><th>АРТИКУЛ</th><th>ЦІНА</th><th></th></tr></thead><tbody>@foreach (var item in Model){<tr><td><strong>@item.Name</strong><small class="cell-sub">Код @item.Id.ToString("D4")</small></td><td class="mono-text">@item.Article</td><td class="money-cell">@item.Price.ToString("N2") ₴</td><td class="row-actions"><a class="text-link" asp-action="Edit" asp-route-id="@item.Id">Редагувати</a><form asp-action="Delete" asp-route-id="@item.Id" method="post"><button class="text-link text-danger" type="submit">Видалити</button></form></td></tr>}</tbody></table></div>
+}
+</section>

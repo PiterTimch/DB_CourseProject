@@ -1,0 +1,7 @@
+@model ServiceForm
+@{
+    ViewData["Title"] = "Нова послуга";
+}
+<div class="page-heading"><div><p class="eyebrow">КАТАЛОГ РОБІТ</p><h1>Нова послуга</h1><p class="heading-note">Додайте роботу до довідника</p></div></div>
+<section class="page-card form-card"><form asp-action="Create" method="post"><partial name="_Form" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

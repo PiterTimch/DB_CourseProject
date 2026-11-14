@@ -1,0 +1,7 @@
+@model EmployeeCreateForm
+@{
+    ViewData["Title"] = "Новий працівник";
+}
+<div class="page-heading"><div><p class="eyebrow">КЕРУВАННЯ ДОСТУПОМ</p><h1>Новий працівник</h1><p class="heading-note">Створіть обліковий запис і призначте роль</p></div></div>
+<section class="page-card form-card"><form asp-action="Create" method="post"><partial name="_CreateForm" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

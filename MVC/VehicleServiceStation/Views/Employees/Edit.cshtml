@@ -1,0 +1,7 @@
+@model EmployeeEditForm
+@{
+    ViewData["Title"] = "Редагувати працівника";
+}
+<div class="page-heading"><div><p class="eyebrow">КЕРУВАННЯ ДОСТУПОМ · ID @Model.EmployeeId</p><h1>Обліковий запис</h1><p class="heading-note">Оновіть дані, роль або пароль</p></div></div>
+<section class="page-card form-card"><form asp-action="Edit" method="post"><partial name="_EditForm" model="Model" /></form></section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
