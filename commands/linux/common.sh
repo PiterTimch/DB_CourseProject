@@ -6,13 +6,13 @@ PROJECT_ROOT="$(cd "$COMMANDS_DIR/.." && pwd)"
 
 load_project_environment() {
     if [[ ! -f "$PROJECT_ROOT/.env" ]]; then
-        printf '%s\n' 'Missing .env file. Copy .env.example to .env and set PG_ADMIN_PASSWORD.' >&2
+        printf '%s\n' 'Missing .env file. Copy .env.example to .env and configure the database connection.' >&2
         return 1
     fi
     set -a
     source "$PROJECT_ROOT/.env"
     set +a
-    local required=(PGHOST PGPORT PGDATABASE PGMAINTENANCE_DB PG_ADMIN_USER PG_ADMIN_PASSWORD APP_DB_USER APP_DB_PASSWORD)
+    local required=(PGHOST PGPORT PGDATABASE APP_DB_USER APP_DB_PASSWORD)
     local key
     for key in "${required[@]}"; do
         if [[ -z "${!key:-}" ]]; then
@@ -20,15 +20,11 @@ load_project_environment() {
             return 1
         fi
     done
-    if [[ "$PG_ADMIN_PASSWORD" == "$APP_DB_PASSWORD" ]]; then
-        printf '%s\n' 'PG_ADMIN_PASSWORD and APP_DB_PASSWORD must be different.' >&2
-        return 1
-    fi
     if ! command -v psql >/dev/null 2>&1; then
         printf '%s\n' 'psql was not found in PATH. Install PostgreSQL client tools.' >&2
         return 1
     fi
-    export PGPASSWORD="$PG_ADMIN_PASSWORD"
+    export PGPASSWORD="$APP_DB_PASSWORD"
 }
 
 invoke_project_psql() {
@@ -36,7 +32,20 @@ invoke_project_psql() {
     local sql_file="$2"
     shift 2
     load_project_environment
+    : "${PGMAINTENANCE_DB:?Missing value for PGMAINTENANCE_DB in .env.}"
+    : "${PG_ADMIN_USER:?Missing value for PG_ADMIN_USER in .env.}"
+    : "${PG_ADMIN_PASSWORD:?Missing value for PG_ADMIN_PASSWORD in .env.}"
+    export PGPASSWORD="$PG_ADMIN_PASSWORD"
     psql --no-psqlrc --no-password --set ON_ERROR_STOP=1 --host "$PGHOST" --port "$PGPORT" --username "$PG_ADMIN_USER" --dbname "$database" "$@" --file "$sql_file"
+}
+
+invoke_application_psql() {
+    local database="$1"
+    local sql_file="$2"
+    shift 2
+    load_project_environment
+    export PGPASSWORD="$APP_DB_PASSWORD"
+    psql --no-psqlrc --no-password --set ON_ERROR_STOP=1 --host "$PGHOST" --port "$PGPORT" --username "$APP_DB_USER" --dbname "$database" "$@" --file "$sql_file"
 }
 
 invoke_reference_import() {
@@ -64,7 +73,7 @@ CREATE TEMP TABLE import_part (name text NOT NULL, article text NOT NULL, price 
 INSERT INTO part (name, article, price) SELECT name, article, price FROM import_part ON CONFLICT (article) DO UPDATE SET name = EXCLUDED.name, price = EXCLUDED.price;
 SQL
     fi
-    if invoke_project_psql "$PGDATABASE" "$sql_file"; then
+    if invoke_application_psql "$PGDATABASE" "$sql_file"; then
         rm -f -- "$sql_file"
     else
         rm -f -- "$sql_file"

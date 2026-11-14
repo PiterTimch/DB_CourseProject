@@ -73,3 +73,13 @@ CREATE INDEX IF NOT EXISTS ix_orders_order_date ON orders(order_date);
 CREATE INDEX IF NOT EXISTS ix_order_service_service_id ON order_service(service_id);
 CREATE INDEX IF NOT EXISTS ix_order_service_employee_id ON order_service(employee_id);
 CREATE INDEX IF NOT EXISTS ix_order_part_part_id ON order_part(part_id);
+
+\getenv app_db_user APP_DB_USER
+SELECT format('GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO %I', :'app_db_user')
+\gexec
+SELECT format('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO %I', :'app_db_user')
+\gexec
+SELECT format('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO %I', :'app_db_user')
+\gexec
+SELECT format('ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO %I', :'app_db_user')
+\gexec

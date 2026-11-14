@@ -4,7 +4,7 @@ $script:CommandsRoot = Join-Path $script:ProjectRoot 'commands'
 function Import-ProjectEnvironment {
     $envFile = Join-Path $script:ProjectRoot '.env'
     if (-not (Test-Path -LiteralPath $envFile)) {
-        throw "Missing .env file. Copy .env.example to .env and set PG_ADMIN_PASSWORD."
+        throw "Missing .env file. Copy .env.example to .env and configure the database connection."
     }
 
     foreach ($line in Get-Content -LiteralPath $envFile) {
@@ -20,22 +20,18 @@ function Import-ProjectEnvironment {
         [Environment]::SetEnvironmentVariable($key, $value, 'Process')
     }
 
-    $required = @('PGHOST', 'PGPORT', 'PGDATABASE', 'PGMAINTENANCE_DB', 'PG_ADMIN_USER', 'PG_ADMIN_PASSWORD', 'APP_DB_USER', 'APP_DB_PASSWORD')
+    $required = @('PGHOST', 'PGPORT', 'PGDATABASE', 'APP_DB_USER', 'APP_DB_PASSWORD')
     foreach ($key in $required) {
         if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($key, 'Process'))) {
             throw "Missing value for $key in .env."
         }
     }
 
-    if ([Environment]::GetEnvironmentVariable('PG_ADMIN_PASSWORD', 'Process') -eq [Environment]::GetEnvironmentVariable('APP_DB_PASSWORD', 'Process')) {
-        throw 'PG_ADMIN_PASSWORD and APP_DB_PASSWORD must be different.'
-    }
-
     if (-not (Get-Command psql -ErrorAction SilentlyContinue)) {
         throw 'psql was not found in PATH. Install PostgreSQL client tools and add psql to PATH.'
     }
 
-    $env:PGPASSWORD = [Environment]::GetEnvironmentVariable('PG_ADMIN_PASSWORD', 'Process')
+    $env:PGPASSWORD = [Environment]::GetEnvironmentVariable('APP_DB_PASSWORD', 'Process')
 }
 
 function Invoke-ProjectPsql {
@@ -46,7 +42,29 @@ function Invoke-ProjectPsql {
     )
 
     Import-ProjectEnvironment
+    foreach ($key in @('PG_ADMIN_USER', 'PG_ADMIN_PASSWORD', 'PGMAINTENANCE_DB')) {
+        if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($key, 'Process'))) {
+            throw "Missing value for $key in .env."
+        }
+    }
+    $env:PGPASSWORD = [Environment]::GetEnvironmentVariable('PG_ADMIN_PASSWORD', 'Process')
     $arguments = @('-X', '-w', '--set', 'ON_ERROR_STOP=1', '--host', $env:PGHOST, '--port', $env:PGPORT, '--username', $env:PG_ADMIN_USER, '--dbname', $Database)
+    foreach ($variable in $Variables) { $arguments += @('--set', $variable) }
+    if ($SqlFile) { $arguments += @('--file', $SqlFile) }
+    & psql @arguments
+    if ($LASTEXITCODE -ne 0) { throw "psql failed with exit code $LASTEXITCODE." }
+}
+
+function Invoke-ApplicationPsql {
+    param(
+        [Parameter(Mandatory = $true)][string]$Database,
+        [string]$SqlFile,
+        [string[]]$Variables = @()
+    )
+
+    Import-ProjectEnvironment
+    $env:PGPASSWORD = [Environment]::GetEnvironmentVariable('APP_DB_PASSWORD', 'Process')
+    $arguments = @('-X', '-w', '--set', 'ON_ERROR_STOP=1', '--host', $env:PGHOST, '--port', $env:PGPORT, '--username', $env:APP_DB_USER, '--dbname', $Database)
     foreach ($variable in $Variables) { $arguments += @('--set', $variable) }
     if ($SqlFile) { $arguments += @('--file', $SqlFile) }
     & psql @arguments
@@ -82,10 +100,10 @@ INSERT INTO part (name, article, price) SELECT name, article, price FROM import_
 
     [System.IO.File]::WriteAllText($sqlFile, $sql, [System.Text.UTF8Encoding]::new($false))
     try {
-        Invoke-ProjectPsql -Database $env:PGDATABASE -SqlFile $sqlFile
+        Invoke-ApplicationPsql -Database $env:PGDATABASE -SqlFile $sqlFile
     } finally {
         Remove-Item -LiteralPath $sqlFile -Force -ErrorAction SilentlyContinue
     }
 }
 
-Export-ModuleMember -Function Import-ProjectEnvironment, Invoke-ProjectPsql, Invoke-ReferenceImport
+Export-ModuleMember -Function Import-ProjectEnvironment, Invoke-ProjectPsql, Invoke-ApplicationPsql, Invoke-ReferenceImport
