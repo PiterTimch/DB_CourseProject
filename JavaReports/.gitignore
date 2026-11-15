@@ -1,0 +1,7 @@
+/target/
+/exports/
+*.log
+*.pdf
+.idea/
+.vscode/
+

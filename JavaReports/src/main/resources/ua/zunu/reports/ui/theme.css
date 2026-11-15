@@ -1,0 +1,326 @@
+.root {
+    -fx-font-family: "Segoe UI", "Arial";
+    -fx-background-color: #f4f6fa;
+    -fx-font-size: 13px;
+}
+
+.login-page {
+    -fx-background-color: #ffffff;
+}
+
+.login-brand {
+    -fx-text-fill: #1c2b42;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.5px;
+}
+
+.login-brand-subhead, .eyebrow, .side-caption, .chart-heading, .table-heading, .director-role {
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.15px;
+}
+
+.login-brand-subhead, .eyebrow, .side-caption, .director-role {
+    -fx-text-fill: #8490a3;
+}
+
+.login-art {
+    -fx-background-color: linear-gradient(to bottom right, #18253a, #263c59);
+    -fx-pref-width: 475px;
+    -fx-min-width: 400px;
+}
+
+.eyebrow-light {
+    -fx-text-fill: #9eb8eb;
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.5px;
+}
+
+.login-art-title {
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -fx-font-weight: 700;
+    -fx-line-spacing: 6px;
+}
+
+.login-art-text {
+    -fx-text-fill: #bec9d9;
+    -fx-font-size: 15px;
+}
+
+.login-form {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-border-color: #edf0f5;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(24, 37, 58, .08), 24, .12, 0, 8);
+}
+
+.login-card-title {
+    -fx-text-fill: #1d2c43;
+    -fx-font-size: 25px;
+    -fx-font-weight: 700;
+}
+
+.muted-text, .page-description, .status-message, .chart-empty {
+    -fx-text-fill: #8490a3;
+}
+
+.field-label {
+    -fx-text-fill: #3b4a60;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.input, .date-input .text-field {
+    -fx-background-color: #f7f8fb;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e4e8ef;
+    -fx-border-radius: 8px;
+    -fx-padding: 12px 13px;
+    -fx-text-fill: #20314a;
+    -fx-prompt-text-fill: #a5afbe;
+}
+
+.input:focused, .date-input:focused, .date-input .text-field:focused {
+    -fx-border-color: #5a86e8;
+    -fx-background-color: white;
+}
+
+.button {
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+}
+
+.button-primary {
+    -fx-text-fill: white;
+    -fx-background-color: #4c79dd;
+}
+
+.button-primary:hover {
+    -fx-background-color: #3d68c7;
+}
+
+.button-secondary {
+    -fx-text-fill: #354966;
+    -fx-background-color: white;
+    -fx-border-color: #dce3ed;
+    -fx-border-radius: 8px;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #f7f9fc;
+}
+
+.login-error {
+    -fx-text-fill: #c94f58;
+    -fx-font-size: 12px;
+}
+
+.app-shell {
+    -fx-background-color: #f4f6fa;
+}
+
+.sidebar {
+    -fx-background-color: #19263a;
+}
+
+.brand-block > .brand-mark {
+    -fx-alignment: center;
+    -fx-min-width: 38px;
+    -fx-min-height: 38px;
+    -fx-background-color: #4c79dd;
+    -fx-background-radius: 11px;
+    -fx-text-fill: white;
+    -fx-font-size: 19px;
+    -fx-font-weight: 800;
+}
+
+.brand-copy .label:first-child {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
+}
+
+.brand-copy .label:last-child {
+    -fx-text-fill: #8898b0;
+    -fx-font-size: 9px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.2px;
+}
+
+.sidebar .side-caption {
+    -fx-padding: 10px 8px 2px;
+    -fx-text-fill: #71829c;
+}
+
+.report-navigation {
+    -fx-spacing: 5px;
+}
+
+.report-nav-button, .logout-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #b5c0d0;
+    -fx-padding: 11px 12px;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.report-nav-button:hover, .report-nav-button.active {
+    -fx-background-color: #2a3a55;
+    -fx-text-fill: white;
+}
+
+.report-nav-button.active {
+    -fx-border-color: #4c79dd;
+    -fx-border-width: 0 0 0 3px;
+    -fx-border-radius: 2px;
+}
+
+.user-card {
+    -fx-background-color: #22324a;
+    -fx-background-radius: 10px;
+    -fx-padding: 13px;
+}
+
+.director-name {
+    -fx-text-fill: #f2f5fa;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.sidebar .director-role {
+    -fx-text-fill: #8f9db1;
+}
+
+.logout-button {
+    -fx-alignment: center-left;
+    -fx-border-color: #33445f;
+    -fx-border-radius: 8px;
+}
+
+.main-content {
+    -fx-background-color: #f4f6fa;
+}
+
+.content-scroll, .content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.page-title {
+    -fx-text-fill: #1e2d43;
+    -fx-font-size: 29px;
+    -fx-font-weight: 700;
+}
+
+.page-description {
+    -fx-font-size: 13px;
+}
+
+.filter-panel, .chart-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-color: #e8ecf2;
+    -fx-border-radius: 12px;
+    -fx-padding: 17px;
+}
+
+.date-field {
+    -fx-min-width: 175px;
+}
+
+.chart-heading, .table-heading {
+    -fx-text-fill: #69788e;
+}
+
+.chart-empty {
+    -fx-padding: 24px 2px;
+}
+
+.chart {
+    -fx-padding: 6px 0 0;
+    -fx-background-color: transparent;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: #e9edf3;
+}
+
+.default-color0.chart-bar, .default-color0.chart-series-line, .default-color0.chart-line-symbol {
+    -fx-bar-fill: #4c79dd;
+    -fx-stroke: #4c79dd;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: #4c79dd, white;
+}
+
+.report-table {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-color: #e8ecf2;
+    -fx-border-radius: 10px;
+    -fx-padding: 4px;
+    -fx-fixed-cell-size: 43px;
+}
+
+.report-table .column-header-background {
+    -fx-background-color: #f7f8fb;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.report-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e9edf3 transparent;
+    -fx-padding: 11px 10px;
+}
+
+.report-table .column-header .label {
+    -fx-text-fill: #63728a;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-alignment: center-left;
+}
+
+.report-table .table-cell {
+    -fx-border-color: transparent transparent #f0f2f6 transparent;
+    -fx-padding: 9px 10px;
+    -fx-text-fill: #2f4058;
+    -fx-font-size: 12px;
+}
+
+.report-table .table-row-cell {
+    -fx-background-color: white;
+}
+
+.report-table .table-row-cell:odd {
+    -fx-background-color: #fbfcfe;
+}
+
+.report-table .table-row-cell:selected {
+    -fx-background-color: #edf3ff;
+}
+
+.table-heading {
+    -fx-alignment: center-left;
+}
+
+.table-heading .label:last-child {
+    -fx-text-fill: #8b97a9;
+    -fx-font-size: 11px;
+}
+
+.status-message {
+    -fx-font-size: 11px;
+}
