@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="VehicleServiceStation.csproj" />
+  <Project Path="../VehicleServiceStation.Tests/VehicleServiceStation.Tests.csproj" />
 </Solution>
