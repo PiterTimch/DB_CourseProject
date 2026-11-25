@@ -57,7 +57,7 @@ public sealed class DatabaseBootstrapper(
     private async Task EnsureSchemaExistsAsync(CancellationToken cancellationToken)
     {
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand("SELECT to_regclass('public.customer') IS NOT NULL AND to_regclass('public.employee') IS NOT NULL AND to_regclass('public.car') IS NOT NULL AND to_regclass('public.orders') IS NOT NULL AND to_regclass('public.service') IS NOT NULL AND to_regclass('public.part') IS NOT NULL AND to_regclass('public.order_service') IS NOT NULL AND to_regclass('public.order_part') IS NOT NULL", connection);
+        await using var command = new NpgsqlCommand("SELECT to_regclass('public.customer') IS NOT NULL AND to_regclass('public.employee') IS NOT NULL AND to_regclass('public.car') IS NOT NULL AND to_regclass('public.orders') IS NOT NULL AND to_regclass('public.service') IS NOT NULL AND to_regclass('public.part') IS NOT NULL AND to_regclass('public.order_service') IS NOT NULL AND to_regclass('public.order_part') IS NOT NULL AND to_regprocedure('public.create_service_order(integer,integer,date,date,integer,integer)') IS NOT NULL AND to_regprocedure('public.add_order_service(integer,integer,integer,integer)') IS NOT NULL AND to_regprocedure('public.close_service_order(integer)') IS NOT NULL AND to_regprocedure('public.recalculate_service_order_total(integer)') IS NOT NULL", connection);
         var exists = (bool)(await command.ExecuteScalarAsync(cancellationToken) ?? false);
         if (!exists)
         {
