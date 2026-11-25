@@ -321,7 +321,8 @@ button, input, select { font: inherit; }
 @media print {
   @page { margin: 14mm; }
   body { background: #fff; color: #111; font-size: 10pt; }
-  .sidebar, .topbar, .page-footer, .page-content, .print-hide { display: none !important; }
+  .sidebar, .topbar, .page-footer, .print-hide { display: none !important; }
+  .page-content > :not(.print-only) { display: none !important; }
   .main-area { margin: 0; }
   .print-only { display: block; }
   .print-sheet { padding: 0; }
