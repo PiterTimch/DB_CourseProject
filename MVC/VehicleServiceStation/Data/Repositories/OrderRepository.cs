@@ -64,7 +64,7 @@ public sealed class OrderRepository(NpgsqlDataSource dataSource) : IOrderReposit
 
     public async Task<int> CreateAsync(OrderCreateForm form, int employeeId, CancellationToken cancellationToken = default)
     {
-        const string sql = "INSERT INTO orders (car_id, employee_id, order_date, deadline, status, mileage) VALUES (@car_id, @employee_id, @order_date, @deadline, 'open', @mileage) RETURNING order_id";
+        const string sql = "CALL create_service_order(@car_id, @employee_id, @order_date, @deadline, @mileage, NULL)";
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.AddWithValue("car_id", form.CarId);
@@ -72,7 +72,13 @@ public sealed class OrderRepository(NpgsqlDataSource dataSource) : IOrderReposit
         command.Parameters.AddWithValue("order_date", form.OrderDate);
         command.Parameters.AddWithValue("deadline", NpgsqlDbType.Date, (object?)form.Deadline ?? DBNull.Value);
         command.Parameters.AddWithValue("mileage", form.Mileage);
-        return (int)(await command.ExecuteScalarAsync(cancellationToken) ?? 0);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken))
+        {
+            throw new InvalidOperationException("Процедура створення замовлення не повернула його ідентифікатор.");
+        }
+
+        return reader.GetInt32(0);
     }
 
     public async Task UpdateAsync(OrderEditForm form, CancellationToken cancellationToken = default)
@@ -107,19 +113,12 @@ public sealed class OrderRepository(NpgsqlDataSource dataSource) : IOrderReposit
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
         await EnsureOpenAsync(connection, transaction, orderId, cancellationToken);
-        const string sql = "INSERT INTO order_service (order_id, service_id, employee_id, quantity, price) SELECT @order_id, s.service_id, @employee_id, @quantity, s.price FROM service s WHERE s.service_id = @service_id ON CONFLICT (order_id, service_id) DO UPDATE SET quantity = order_service.quantity + EXCLUDED.quantity, employee_id = EXCLUDED.employee_id";
-        await using var command = new NpgsqlCommand(sql, connection, transaction);
+        await using var command = new NpgsqlCommand("CALL add_order_service(@order_id, @service_id, @employee_id, @quantity)", connection, transaction);
         command.Parameters.AddWithValue("order_id", orderId);
         command.Parameters.AddWithValue("service_id", form.ServiceId);
         command.Parameters.AddWithValue("employee_id", form.EmployeeId);
         command.Parameters.AddWithValue("quantity", form.Quantity);
-        if (await command.ExecuteNonQueryAsync(cancellationToken) == 0)
-        {
-            throw new KeyNotFoundException("Послугу не знайдено.");
-        }
-
-        await MarkInProgressAsync(connection, transaction, orderId, cancellationToken);
-        await RecalculateAsync(connection, transaction, orderId, cancellationToken);
+        await command.ExecuteNonQueryAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -174,17 +173,7 @@ public sealed class OrderRepository(NpgsqlDataSource dataSource) : IOrderReposit
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
         await EnsureOpenAsync(connection, transaction, orderId, cancellationToken);
-        await using (var check = new NpgsqlCommand("SELECT EXISTS (SELECT 1 FROM order_service WHERE order_id = @id)", connection, transaction))
-        {
-            check.Parameters.AddWithValue("id", orderId);
-            if ((bool)(await check.ExecuteScalarAsync(cancellationToken) ?? false) is false)
-            {
-                throw new InvalidOperationException("Додайте щонайменше одну послугу перед закриттям замовлення.");
-            }
-        }
-
-        await RecalculateAsync(connection, transaction, orderId, cancellationToken);
-        await using var command = new NpgsqlCommand("UPDATE orders SET status = 'closed' WHERE order_id = @id", connection, transaction);
+        await using var command = new NpgsqlCommand("CALL close_service_order(@id)", connection, transaction);
         command.Parameters.AddWithValue("id", orderId);
         await command.ExecuteNonQueryAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
