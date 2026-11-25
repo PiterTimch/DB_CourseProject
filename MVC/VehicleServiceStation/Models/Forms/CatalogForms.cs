@@ -10,7 +10,7 @@ public sealed class ServiceForm
     [StringLength(160, MinimumLength = 2)]
     public string Name { get; set; } = string.Empty;
 
-    [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "Ціна має бути невід’ємною.")]
+    [Range(typeof(decimal), "0", "9999999999.99", ParseLimitsInInvariantCulture = true, ErrorMessage = "Ціна має бути невід’ємною.")]
     public decimal Price { get; set; }
 }
 
@@ -26,6 +26,6 @@ public sealed class PartForm
     [StringLength(80, MinimumLength = 2)]
     public string Article { get; set; } = string.Empty;
 
-    [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "Ціна має бути невід’ємною.")]
+    [Range(typeof(decimal), "0", "9999999999.99", ParseLimitsInInvariantCulture = true, ErrorMessage = "Ціна має бути невід’ємною.")]
     public decimal Price { get; set; }
 }
