@@ -39,7 +39,7 @@ public static class EnvironmentFile
                     value = value[1..^1];
                 }
 
-                if (Environment.GetEnvironmentVariable(key) is null)
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(key)))
                 {
                     Environment.SetEnvironmentVariable(key, value);
                 }
@@ -54,7 +54,7 @@ public static class EnvironmentFile
         var directory = new DirectoryInfo(path);
         while (directory is not null)
         {
-            if (File.Exists(Path.Combine(directory.FullName, ".env")) || Directory.Exists(Path.Combine(directory.FullName, "commands")))
+            if (File.Exists(Path.Combine(directory.FullName, ".env")))
             {
                 return directory.FullName;
             }
