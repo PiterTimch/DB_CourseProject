@@ -71,7 +71,7 @@ public final class DashboardView {
         shell.setCenter(buildContent(director));
         var scene = new Scene(shell, 1440, 900);
         scene.getStylesheets().add(getClass().getResource("/ua/zunu/reports/ui/theme.css").toExternalForm());
-        stage.setTitle("GarageFlow · Аналітика");
+        stage.setTitle("Garage · Звіти");
         stage.setMinWidth(1120);
         stage.setMinHeight(720);
         stage.setScene(scene);
@@ -86,7 +86,7 @@ public final class DashboardView {
         sidebar.getStyleClass().add("sidebar");
         sidebar.setPadding(new Insets(28, 18, 18, 18));
         sidebar.setPrefWidth(275);
-        var brand = new HBox(12, new Label("G"), new VBox(1, new Label("garageflow"), new Label("ЗВІТИ СЕРВІСУ")));
+        var brand = new HBox(12, new Label("G"), new VBox(1, new Label("Garage"), new Label("ГЕНЕРАТОР ЗВІТІВ")));
         brand.getStyleClass().add("brand-block");
         brand.getChildren().getFirst().getStyleClass().add("brand-mark");
         brand.getChildren().get(1).getStyleClass().add("brand-copy");
@@ -262,7 +262,7 @@ public final class DashboardView {
         }
         var chooser = new FileChooser();
         chooser.setTitle("Зберегти звіт у PDF");
-        chooser.setInitialFileName("garageflow-" + selected.name().toLowerCase() + ".pdf");
+        chooser.setInitialFileName("garage-" + selected.name().toLowerCase() + ".pdf");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF document", "*.pdf"));
         var selectedFile = chooser.showSaveDialog(table.getScene().getWindow());
         if (selectedFile == null) {
@@ -307,7 +307,7 @@ public final class DashboardView {
     private static void showError(String message) {
         var alert = new Alert(Alert.AlertType.ERROR, message);
         alert.setHeaderText("Потрібна перевірка");
-        alert.setTitle("GarageFlow · Повідомлення");
+        alert.setTitle("Garage · Повідомлення");
         alert.showAndWait();
     }
 }

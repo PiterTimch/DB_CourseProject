@@ -36,7 +36,7 @@ public final class ReportApplication extends Application {
             new LoginView(authentication).show(stage, director -> openDashboard(stage, director));
         } catch (Exception exception) {
             var alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("GarageFlow · Помилка запуску");
+            alert.setTitle("Garage · Помилка запуску");
             alert.setHeaderText("Не вдалося підготувати застосунок звітів");
             alert.setContentText(exception.getMessage());
             alert.showAndWait();

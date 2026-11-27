@@ -63,7 +63,7 @@ public final class ReportPdfExporter {
 
     private float drawPageHeading(PDPageContentStream stream, PDDocument document, PDRectangle pageSize, PDType0Font font, ReportResult report, int pageNumber, boolean includeChart) throws IOException {
         var y = pageSize.getHeight() - MARGIN;
-        write(stream, font, "GARAGEFLOW  /  ЗВІТИ СЕРВІСНОГО ЦЕНТРУ", MARGIN, y, 8, new Color(80, 96, 119));
+        write(stream, font, "GARAGE  /  ЗВІТИ СЕРВІСНОГО ЦЕНТРУ", MARGIN, y, 8, new Color(80, 96, 119));
         write(stream, font, "Сторінка " + pageNumber, pageSize.getWidth() - MARGIN - 60, y, 8, new Color(80, 96, 119));
         y -= 30;
         write(stream, font, report.type().title(), MARGIN, y, 18, new Color(24, 34, 56));
