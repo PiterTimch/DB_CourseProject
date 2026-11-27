@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -28,26 +31,28 @@ public final class LoginView {
         var root = new BorderPane();
         root.getStyleClass().add("login-page");
 
-        var brand = new Label("GARAGEFLOW");
+        var brand = new Label("GARAGE");
         brand.getStyleClass().add("login-brand");
-        var brandSubhead = new Label("SERVICE CENTER  /  MANAGEMENT");
+        var brandSubhead = new Label("СЕРВІСНИЙ ЦЕНТР");
         brandSubhead.getStyleClass().add("login-brand-subhead");
         var top = new VBox(5, brand, brandSubhead);
-        top.setPadding(new Insets(38, 48, 20, 48));
+        top.setPadding(new Insets(24, 36, 20, 36));
         root.setTop(top);
 
         var art = new VBox(20);
         art.getStyleClass().add("login-art");
         art.setAlignment(Pos.CENTER_LEFT);
-        art.setPadding(new Insets(40, 64, 50, 64));
-        var artEyebrow = new Label("ЗВІТНІСТЬ СЕРВІСНОГО ЦЕНТРУ");
+        art.setPadding(new Insets(40));
+        var artEyebrow = new Label("GARAGE");
         artEyebrow.getStyleClass().add("eyebrow-light");
-        var artTitle = new Label("Бачити більше.\nКерувати точніше.");
+        var artTitle = new Label("Генератор\nзвітів");
         artTitle.getStyleClass().add("login-art-title");
-        var artText = new Label("Аналітика роботи, послуг і клієнтів в одному просторі.");
+        var artText = new Label("Формування звітів сервісного центру");
+        artText.setWrapText(true);
         artText.getStyleClass().add("login-art-text");
         art.getChildren().addAll(artEyebrow, artTitle, artText);
-        root.setLeft(art);
+        art.setPrefWidth(360);
+        art.setMinWidth(300);
 
         var login = new TextField();
         login.setPromptText("Логін керівника");
@@ -60,21 +65,25 @@ public final class LoginView {
         var error = new Label();
         error.getStyleClass().add("login-error");
         error.setWrapText(true);
-        var button = new Button("Увійти до звітів  →");
+        var button = new Button("Увійти");
         button.getStyleClass().addAll("button", "button-primary");
         button.setMaxWidth(Double.MAX_VALUE);
 
         var cardTitle = new Label("Вхід до системи");
         cardTitle.getStyleClass().add("login-card-title");
-        var cardText = new Label("Доступ надається лише обліковому запису керівника.");
+        var cardText = new Label("Введіть облікові дані керівника.");
         cardText.getStyleClass().add("muted-text");
         var form = new VBox(13, cardTitle, cardText, fieldLabel("Логін", login), fieldLabel("Пароль", password), error, button);
         form.getStyleClass().add("login-form");
-        form.setMaxWidth(390);
-        form.setPadding(new Insets(38));
-        StackPane card = new StackPane(form);
-        card.setPadding(new Insets(32, 48, 48, 48));
-        root.setCenter(card);
+        form.setMaxSize(390, Region.USE_PREF_SIZE);
+        form.setPadding(new Insets(32));
+        var card = new StackPane(form);
+        card.setPadding(new Insets(28));
+        var body = new HBox(32, art, card);
+        body.setAlignment(Pos.CENTER);
+        body.setPadding(new Insets(12, 48, 42, 48));
+        HBox.setHgrow(card, Priority.ALWAYS);
+        root.setCenter(body);
 
         var signIn = (Runnable) () -> {
             try {
@@ -93,11 +102,11 @@ public final class LoginView {
         button.setOnAction(event -> signIn.run());
         password.setOnAction(event -> signIn.run());
 
-        var scene = new Scene(root, 1180, 760);
+        var scene = new Scene(root, 1000, 680);
         scene.getStylesheets().add(getClass().getResource("/ua/zunu/reports/ui/theme.css").toExternalForm());
-        stage.setTitle("GarageFlow · Звіти");
+        stage.setTitle("Garage · Звіти");
         stage.setMinWidth(980);
-        stage.setMinHeight(680);
+        stage.setMinHeight(600);
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();

@@ -5,12 +5,12 @@
 }
 
 .login-page {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #f5f7fb;
 }
 
 .login-brand {
-    -fx-text-fill: #1c2b42;
-    -fx-font-size: 16px;
+    -fx-text-fill: #17263c;
+    -fx-font-size: 18px;
     -fx-font-weight: 800;
     -fx-letter-spacing: 1.5px;
 }
@@ -26,9 +26,10 @@
 }
 
 .login-art {
-    -fx-background-color: linear-gradient(to bottom right, #18253a, #263c59);
-    -fx-pref-width: 475px;
-    -fx-min-width: 400px;
+    -fx-background-color: linear-gradient(to bottom right, #17263d, #263d5c);
+    -fx-pref-width: 360px;
+    -fx-min-width: 300px;
+    -fx-background-radius: 18px;
 }
 
 .eyebrow-light {
@@ -40,27 +41,28 @@
 
 .login-art-title {
     -fx-text-fill: white;
-    -fx-font-size: 42px;
+    -fx-font-size: 38px;
     -fx-font-weight: 700;
     -fx-line-spacing: 6px;
 }
 
 .login-art-text {
     -fx-text-fill: #bec9d9;
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
+    -fx-max-width: 250px;
 }
 
 .login-form {
     -fx-background-color: white;
-    -fx-background-radius: 16px;
-    -fx-border-color: #edf0f5;
-    -fx-border-radius: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(24, 37, 58, .08), 24, .12, 0, 8);
+    -fx-background-radius: 14px;
+    -fx-border-color: #e7ebf2;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(24, 37, 58, .07), 20, .10, 0, 5);
 }
 
 .login-card-title {
     -fx-text-fill: #1d2c43;
-    -fx-font-size: 25px;
+    -fx-font-size: 23px;
     -fx-font-weight: 700;
 }
 
@@ -99,11 +101,11 @@
 
 .button-primary {
     -fx-text-fill: white;
-    -fx-background-color: #4c79dd;
+    -fx-background-color: #315fbd;
 }
 
 .button-primary:hover {
-    -fx-background-color: #3d68c7;
+    -fx-background-color: #264f9f;
 }
 
 .button-secondary {
@@ -127,7 +129,7 @@
 }
 
 .sidebar {
-    -fx-background-color: #19263a;
+    -fx-background-color: #17263d;
 }
 
 .brand-block > .brand-mark {
@@ -174,12 +176,12 @@
 }
 
 .report-nav-button:hover, .report-nav-button.active {
-    -fx-background-color: #2a3a55;
+    -fx-background-color: #263b59;
     -fx-text-fill: white;
 }
 
 .report-nav-button.active {
-    -fx-border-color: #4c79dd;
+    -fx-border-color: #6f96e8;
     -fx-border-width: 0 0 0 3px;
     -fx-border-radius: 2px;
 }
